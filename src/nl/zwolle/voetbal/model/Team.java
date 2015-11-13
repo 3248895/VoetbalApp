@@ -6,12 +6,12 @@ public class Team {
 	
 	String name;
 	String level;
-	ArrayList<Player> players = new ArrayList<Player>(40);
+	Player player;
 	
-	public Team(String name, String level, ArrayList<Player> players) {
+	public Team(String name, String level, Player player) {
 		this.name = name;
 		this.level = level;
-		this.players = players;
+		this.player = player;
 	}
 	
 }

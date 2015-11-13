@@ -1,26 +1,40 @@
 package nl.zwolle.voetbal.model;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
 
-import android.content.Context;
-
-public class Player extends SugarRecord<Player> {
+public class Player extends SugarRecord<Player> implements Serializable {
 
 	private String username;
 	private String firstName;
 	private String lastName;
 	private String password;
+	private boolean loggedIn;
 	
 	public Player() {
     }
 	
-	public Player(String userName, String firstName, String lastName, String password) {
+	public Player(	String userName, String firstName, String lastName, 
+					String password, boolean loggedIn) {
 		this.username = userName;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.password = password;
+		this.loggedIn = true;
 	}
 	
+	public boolean isLoggedIn() {
+		return loggedIn;
+	}
+
+	public void setLoggedIn(boolean loggedIn) {
+		this.loggedIn = loggedIn;
+	}
+
 	public String getUsername() {
 		return username;
 	}
@@ -58,6 +72,10 @@ public class Player extends SugarRecord<Player> {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public String toString() {
+		return "This is " + this.username;
 	}
 
 }

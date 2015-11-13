@@ -1,5 +1,9 @@
 package nl.zwolle.voetbal;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import nl.zwolle.voetbal.model.Player;
 
 @SuppressLint("NewApi")
 public class MainActivity extends ActionBarActivity {
@@ -21,6 +26,7 @@ public class MainActivity extends ActionBarActivity {
 	private TextView attemptsLeftTV;
 	private TextView numberOfRemainingLoginAttemptsTV;
 	int numberOfRemainingLoginAttempts = 3;
+	Player player;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,16 +35,15 @@ public class MainActivity extends ActionBarActivity {
 		setupVariables();
 	}
 	
-	public void authenticateLogin(View view) {
+	public void authenticateLogin(View view) throws IOException {
 		if (username.getText().toString().equals("admin") && 
-				password.getText().toString().equals("admin")) {
-			Toast.makeText(getApplicationContext(), "Hello admin!", 
-			Toast.LENGTH_SHORT).show();
+			password.getText().toString().equals("admin")) {
+				Intent intent = new Intent(this, AdminActivity.class);
+				startActivity(intent);
 			
-			Intent intent = new Intent(this, AdminActivity.class);
-			startActivity(intent);
-			
-		} else {
+		} 
+		if (username.getText().toString().equals("admin") && 
+				!password.getText().toString().equals("admin")) {
 			Toast.makeText(getApplicationContext(), "Seems like you 're not admin!", 
 					Toast.LENGTH_SHORT).show();
 			numberOfRemainingLoginAttempts--;
@@ -52,6 +57,24 @@ public class MainActivity extends ActionBarActivity {
 				loginLockedTV.setBackgroundColor(Color.RED);
 				loginLockedTV.setText("LOGIN LOCKED!!!");
 			}
+		}
+		else checkLogin();
+	}
+
+	private void checkLogin() throws IOException {
+		List<Player> players = Player.find(Player.class, "username = ?", username.getText().toString());
+		System.out.println(players.isEmpty());
+		System.out.println(players.get(0).getUsername());
+		System.out.println(players.get(0).getPassword());
+		System.out.println(password.getText().toString());
+		if(players.get(0).getPassword().equals(password.getText().toString())) {
+			System.out.println("Password klopt");
+			player = players.get(0);
+			player.setLoggedIn(true);
+			System.out.println("loggedIn: " + player.isLoggedIn());
+			Intent intent = new Intent(this, PlayerActivity.class);
+			intent.putExtra("playerObject", player);
+			startActivity(intent);
 		}
 	}
 

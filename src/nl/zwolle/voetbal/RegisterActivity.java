@@ -1,5 +1,7 @@
 package nl.zwolle.voetbal;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,14 +13,16 @@ import android.widget.EditText;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.Toast;
 import nl.zwolle.voetbal.model.Player;
+import nl.zwolle.voetbal.model.Team;
 
 public class RegisterActivity extends Activity {
 	
-	Button button;
 	private EditText username;
 	private EditText firstName;
 	private EditText lastName;
 	private EditText password;
+	public ArrayList<Team> teams = new ArrayList<Team>(5);
+	private Player player;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -33,13 +37,16 @@ public class RegisterActivity extends Activity {
 		lastName = (EditText) findViewById(R.id.lastName);
 		password = (EditText) findViewById(R.id.password);
 		
-		Player player = new Player(	username.getText().toString(), 
-									firstName.getText().toString(),
-									lastName.getText().toString(),
-									password.getText().toString());
-		player.save();
+		player = new Player(	username.getText().toString(), 
+								firstName.getText().toString(),
+								lastName.getText().toString(),
+								password.getText().toString(),
+								true);
+		
+		player.save(); 
 		
 		Intent intent = new Intent(this, PlayerActivity.class);
+		intent.putExtra("playerObject", player);
 		startActivity(intent);
 	}
 
